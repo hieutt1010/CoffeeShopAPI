@@ -1,0 +1,38 @@
+https://hieutt.us.auth0.com/authorize?audience=CoffeeShopAPI&response_type=token&client_id=UwkVgZh4ayWTP71FHB14FUKX0wFbXd6l&redirect_uri=https://localhost:8080/login-results
+
+
+
+
+Manager:
+{
+  "iss": "https://hieutt.us.auth0.com/",
+  "sub": "auth0|66fa4b8c7b22dc7dc48017c8",
+  "aud": "CoffeeShopAPI",
+  "iat": 1728802491,
+  "exp": 1728809691,
+  "scope": "",
+  "azp": "UwkVgZh4ayWTP71FHB14FUKX0wFbXd6l",
+  "permissions": [
+    "delete:drinks",
+    "get:drinks",
+    "get:drinks-detail",
+    "patch:drinks",
+    "post:drinks"
+  ]
+}
+
+
+Barista:
+{
+  "iss": "https://hieutt.us.auth0.com/",
+  "sub": "google-oauth2|116315167044805246148",
+  "aud": "CoffeeShopAPI",
+  "iat": 1728802571,
+  "exp": 1728809771,
+  "scope": "",
+  "azp": "UwkVgZh4ayWTP71FHB14FUKX0wFbXd6l",
+  "permissions": [
+    "get:drinks",
+    "get:drinks-detail"
+  ]
+}

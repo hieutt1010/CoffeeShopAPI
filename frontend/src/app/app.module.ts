@@ -12,20 +12,18 @@ import { AppComponent } from './app.component';
 import { DrinksService } from './services/drinks.service';
 import { AuthService } from './services/auth.service';
 
-import { HttpClientModule } from '@angular/common/http';
-
+import { provideHttpClient } from '@angular/common/http';
 import { from } from 'rxjs';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    HttpClientModule,
     AppRoutingModule
   ],
   providers: [
+    provideHttpClient(),
     StatusBar,
     SplashScreen,
     AuthService,

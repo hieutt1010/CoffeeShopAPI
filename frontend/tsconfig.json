@@ -5,12 +5,14 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es5",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,  // or "emitDeclarationOnly": true
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -18,5 +20,5 @@
       "es2018",
       "dom"
     ]
-  }
+  },
 }

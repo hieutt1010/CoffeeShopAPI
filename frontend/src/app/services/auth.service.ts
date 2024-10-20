@@ -29,6 +29,8 @@ export class AuthService {
     link += 'client_id=' + this.clientId + '&';
     link += 'redirect_uri=' + this.callbackURL + callbackPath;
     return link;
+
+    //https://hieutt.us.auth0.com/authorize?audience=CoffeeShopAPI&response_type=token&client_id=UwkVgZh4ayWTP71FHB14FUKX0wFbXd6l&redirect_uri=https://localhost:8080/login-results
   }
 
   // invoked in app.component on load

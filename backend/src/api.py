@@ -10,7 +10,12 @@ from .auth.auth import AuthError, requires_auth
 app = Flask(__name__)
 setup_db(app)
 CORS(app)
+@app.after_request
 
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH, OPTIONS')
+    return response
 '''
 @TODO uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
@@ -29,8 +34,7 @@ db_drop_and_create_all()
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['GET'])
-@requires_auth('get:drinks')
-def get_drinks(payload):
+def get_drinks():
     try:
         drinks = Drink.query.all()
         
@@ -54,6 +58,9 @@ def get_drinks(payload):
 @requires_auth('get:drinks-detail')
 def get_drinks_detail(payload):
     try:
+        if payload is None:
+            abort(401)
+            
         drinks = Drink.query.all()
         
         format_drinks = [drink.long() for drink in drinks]
@@ -62,7 +69,7 @@ def get_drinks_detail(payload):
             'drinks': format_drinks    
         })
     except:
-        abort(404)
+        abort(401)
 
 '''
 @TODO implement endpoint
@@ -73,10 +80,37 @@ def get_drinks_detail(payload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-# @app.route('/drinks', methods=['POST'])
-# @requires_auth('post:drinks')
-# def post_drink(payload):
+# {
+# "title": "Water3",
+# "recipe": {
+# "name": "Water",
+# "color": "blue",
+# "parts": 1
+# }
+# }
+@app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
+def post_drink(payload):
+    if payload is None: 
+        abort(401)
+    if payload in [400,403]: 
+        abort(payload)
+    body = request.get_json()
+    reqest_title = body.get('title')
+    # reqest_recipe = body.get('recipe')
+    request_recipe = json.dumps(body['recipe'])
+    new_drink = Drink(title = reqest_title, recipe = f'[{request_recipe}]')
+    new_drink.insert()
+    drink = new_drink.long()
+    
+    return jsonify({
+        'success': True,
+        'drinks': drink
+    })
 
+# {
+#     "title": "Water5"
+# }
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -88,7 +122,27 @@ def get_drinks_detail(payload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<int:id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def patch_drink(payload,id):
+    if payload is None: 
+        abort(401)
+    if payload in [400,403]: 
+        abort(payload)
+    modify_drink = Drink.query.filter(Drink.id == id).one_or_none()
+    if modify_drink is None:
+        abort(404)
+    else:
+        body = request.get_json()
+        title = body['title']
+        modify_drink.title = title
+        modify_drink.update()
+        
+        drink = modify_drink.long()
+    return jsonify({
+        "success": True, 
+        "drinks": [drink]
+        })
 
 '''
 @TODO implement endpoint
@@ -100,7 +154,20 @@ def get_drinks_detail(payload):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<int:id>', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drink(payload,id):
+    if payload is None: 
+        abort(401)
+    if payload in [400,403]: 
+        abort(payload)
+        
+    delete_drink = Drink.query.filter(Drink.id == id).one_or_none()
+    if delete_drink is None:
+        abort(404)
+        
+    delete_drink.delete()
+    return jsonify({"success": True, "delete": id})
 
 # Error Handling
 '''

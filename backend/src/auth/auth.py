@@ -36,10 +36,7 @@ def get_token_auth_header():
     # Get auth type in header
     auth = request.headers.get('Authorization', None)
     if not auth:
-        raise AuthError({
-            'code': 'authorization_header_missing',
-            'description': 'Authorization header is expected.'
-        }, 401)
+        abort(401)
         
     # Check if not bearer type raise AuthError
     parts = auth.split()
@@ -77,10 +74,10 @@ def get_token_auth_header():
 '''
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
-        abort(400)
+        return 400
         
     if permission not in payload['permissions']:
-        abort(403)
+        return 403
         
     return True
 
@@ -172,13 +169,14 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            token = get_token_auth_header()
             try:
-                payload = verify_decode_jwt(token)
+                token = get_token_auth_header()
             except:
-                abort(401)
-                
-            check_permissions(permission, payload)
+                return f(None,*args, **kwargs)
+            payload = verify_decode_jwt(token)
+            noti = check_permissions(permission, payload)
+            if noti is not True: 
+                return  f(noti,*args, **kwargs)
             return f(payload,*args, **kwargs)
 
         return wrapper

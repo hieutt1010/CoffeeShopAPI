@@ -11,7 +11,6 @@ import { AuthService } from 'src/app/services/auth.service';
 export class DrinkFormComponent implements OnInit {
   @Input() drink: Drink;
   @Input() isNew: boolean;
-
   constructor(
     public auth: AuthService,
     private modalCtrl: ModalController,
@@ -27,6 +26,9 @@ export class DrinkFormComponent implements OnInit {
       };
       this.addIngredient();
     }
+  }
+  logForm(){
+    
   }
 
   customTrackBy(index: number, obj: any): any {

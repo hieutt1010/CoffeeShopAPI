@@ -10,7 +10,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
     "allowImportingTsExtensions": true,
     "noEmit": true,  // or "emitDeclarationOnly": true
     "typeRoots": [
@@ -19,6 +18,11 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "target": "ES2022",
+    "useDefineForClassFields": false,
   },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
 }
